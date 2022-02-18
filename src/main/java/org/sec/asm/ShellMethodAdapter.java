@@ -9,8 +9,8 @@ public class ShellMethodAdapter extends MethodVisitor {
     private final List<Result> results;
     private final String owner;
 
-    public ShellMethodAdapter(int api, String owner, List<Result> results) {
-        super(api);
+    public ShellMethodAdapter(int api, MethodVisitor mv, String owner, List<Result> results) {
+        super(api, mv);
         this.results = results;
         this.owner = owner;
     }

@@ -5,17 +5,14 @@ import org.objectweb.asm.MethodVisitor;
 import org.sec.Result;
 
 import java.util.List;
-import java.util.Map;
 
 public class ShellClassVisitor extends ClassVisitor {
     private String owner;
     private final List<Result> results;
-    private final Map<String, String> blackList;
 
-    public ShellClassVisitor(int api, Map<String, String> blackList, List<Result> results) {
+    public ShellClassVisitor(int api, List<Result> results) {
         super(api);
         this.results = results;
-        this.blackList = blackList;
     }
 
     @Override
@@ -27,11 +24,6 @@ public class ShellClassVisitor extends ClassVisitor {
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
         MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
-        for (Map.Entry<String, String> entry : blackList.entrySet()) {
-            if (entry.getKey().equals(this.owner) && entry.getValue().equals(name)) {
-                return new ShellMethodAdapter(this.api, this.owner, results);
-            }
-        }
-        return mv;
+        return new ShellMethodAdapter(this.api, mv, this.owner, results);
     }
 }

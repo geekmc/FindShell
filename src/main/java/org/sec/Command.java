@@ -9,8 +9,8 @@ public class Command {
     @Parameter(names = {"-p","--pid"}, description = "Target JVM pid")
     public String pid;
 
-    @Parameter(names = {"--package"}, description = "Target Package")
-    public String packageName;
+    @Parameter(names = {"-r","--repair"}, description = "Try Repair")
+    public boolean repair;
 
     @Parameter(names = {"--debug"}, description = "Use Debug Module")
     public boolean debug;

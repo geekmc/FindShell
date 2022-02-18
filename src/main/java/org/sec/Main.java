@@ -1,6 +1,9 @@
 package org.sec;
 
 import com.beust.jcommander.JCommander;
+import org.sec.repair.RepairService;
+import org.sec.util.DirUtil;
+import org.sec.util.NameFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.jvm.hotspot.HotSpotAgent;
@@ -14,6 +17,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
+// 基于静态分析动态，打破规则之道   - Java King
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
@@ -36,20 +40,18 @@ public class Main {
             public void write(int arg) {
             }
         });
-//        System.setOut(noPrint);
-//        System.setErr(noPrint);
+        System.setOut(noPrint);
+        System.setErr(noPrint);
         try {
             logger.info("start find shell");
             int pid = Integer.parseInt(command.pid);
-            ClassFilter filter;
-            if (command.packageName != null && !command.packageName.equals("")) {
-                filter = new NameFilter(command.packageName);
-            } else {
-                filter = new NameFilter();
-            }
+            ClassFilter filter = new NameFilter();
             start(pid, filter);
             List<String> files = DirUtil.getFiles("out");
-            Analysis.doAnalysis(files);
+            List<Result> results = Analysis.doAnalysis(files);
+            if (command.repair) {
+                RepairService.start(results, pid);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("unknown error");
@@ -67,7 +69,6 @@ public class Main {
         try {
             method.invoke(classDump, (Object) params);
         } catch (Exception ignored) {
-            ignored.printStackTrace();
             logger.error("unknown error");
             return;
         }

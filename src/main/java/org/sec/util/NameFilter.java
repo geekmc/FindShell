@@ -1,5 +1,6 @@
-package org.sec;
+package org.sec.util;
 
+import org.sec.Constant;
 import sun.jvm.hotspot.oops.InstanceKlass;
 import sun.jvm.hotspot.tools.jcore.ClassFilter;
 
@@ -7,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NameFilter implements ClassFilter {
-    private String packageName;
     private static final List<String> blackList = new ArrayList<>();
 
     static {
@@ -17,26 +17,17 @@ public class NameFilter implements ClassFilter {
     public NameFilter() {
     }
 
-    public NameFilter(String packageName) {
-        packageName = packageName.replace(".", "/");
-        this.packageName = packageName;
-    }
-
     @Override
     public boolean canInclude(InstanceKlass instanceKlass) {
         String klassName = instanceKlass.getName().asString();
         if (blackList.contains(klassName)) {
             return true;
         }
-        if (packageName == null || packageName.equals("")) {
-            for (String s : Constant.whiteList) {
-                if (klassName.startsWith(s)) {
-                    return false;
-                }
+        for (String k : Constant.keyword) {
+            if (klassName.contains(k)) {
+                return true;
             }
-            return true;
-        } else {
-            return klassName.startsWith(packageName);
         }
+        return false;
     }
 }

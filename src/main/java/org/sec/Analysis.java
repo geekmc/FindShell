@@ -1,47 +1,49 @@
 package org.sec;
 
+import com.sun.source.tree.BreakTree;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Opcodes;
 import org.sec.asm.DefineClassVisitor;
 import org.sec.asm.ShellClassVisitor;
-import org.sec.repair.ApplicationFilterChainRepair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-// 基于静态分析动态，打破规则之道   - Java King
 public class Analysis {
-    public static void doAnalysis(List<String> files) throws Exception {
+    private static final Logger logger = LoggerFactory.getLogger(Analysis.class);
 
+    public static List<Result> doAnalysis(List<String> files) throws Exception {
+        logger.info("start analysis");
         List<Result> results = new ArrayList<>();
-        Map<String, String> data = new HashMap<>();
-        Constant.blackList.forEach(s -> {
-            String[] splits = s.split("#");
-            data.put(splits[0], splits[1]);
-        });
+        int api = Opcodes.ASM9;
+        int parsingOptions = ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES;
         for (String fileName : files) {
             byte[] bytes = Files.readAllBytes(Paths.get(fileName));
             if (bytes.length == 0) {
                 continue;
             }
-            ClassReader cr = new ClassReader(bytes);
-            int api = Opcodes.ASM9;
-            ClassVisitor cv = new ShellClassVisitor(api, data, results);
-            int parsingOptions = ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES;
-            cr.accept(cv, parsingOptions);
-
-            cr = new ClassReader(bytes);
-            cv = new DefineClassVisitor(api, data, results);
-            cr.accept(cv, parsingOptions);
-
+            ClassReader cr;
+            ClassVisitor cv;
+            try {
+                // runtime exec analysis
+                cr = new ClassReader(bytes);
+                cv = new ShellClassVisitor(api, results);
+                cr.accept(cv, parsingOptions);
+                // classloader defineClass analysis
+                cr = new ClassReader(bytes);
+                cv = new DefineClassVisitor(api, results);
+                cr.accept(cv, parsingOptions);
+            } catch (Exception ignored) {
+            }
         }
         for (Result r : results) {
-            System.out.println(r.getKey()+r.getType());
+            logger.info(r.getKey() + " -> " + r.getTypeWord());
         }
+        return results;
     }
 }

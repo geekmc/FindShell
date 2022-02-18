@@ -22,4 +22,15 @@ public class Result {
     public void setType(Integer type) {
         this.type = type;
     }
+
+    public String getTypeWord() {
+        switch (this.type) {
+            case RUNTIME_EXEC_TIME:
+                return "Runtime-Exec";
+            case CLASSLOADER_DEFINE:
+                return "ClassLoader-DefineClass";
+            default:
+                return "";
+        }
+    }
 }
