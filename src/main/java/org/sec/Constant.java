@@ -50,5 +50,7 @@ public class Constant {
         keyword.add("payload");
         keyword.add("exp");
         keyword.add("poc");
+        keyword.add("rebeyond");
+        keyword.add("metasploit");
     }
 }

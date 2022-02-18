@@ -36,8 +36,8 @@ public class Main {
             public void write(int arg) {
             }
         });
-        System.setOut(noPrint);
-        System.setErr(noPrint);
+//        System.setOut(noPrint);
+//        System.setErr(noPrint);
         try {
             logger.info("start find shell");
             int pid = Integer.parseInt(command.pid);
@@ -51,6 +51,7 @@ public class Main {
             List<String> files = DirUtil.getFiles("out");
             Analysis.doAnalysis(files);
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error("unknown error");
         }
     }
@@ -66,6 +67,7 @@ public class Main {
         try {
             method.invoke(classDump, (Object) params);
         } catch (Exception ignored) {
+            ignored.printStackTrace();
             logger.error("unknown error");
             return;
         }

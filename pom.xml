@@ -12,7 +12,6 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <asm.version>9.2</asm.version>
         <project.build.sourceEncoding>
             UTF-8
         </project.build.sourceEncoding>
@@ -39,21 +38,18 @@
             <version>1.82</version>
         </dependency>
         <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm</artifactId>
-            <version>${asm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm-commons</artifactId>
-            <version>${asm.version}</version>
-        </dependency>
-        <dependency>
             <groupId>sun.jvm.hotspot</groupId>
             <artifactId>sa-jdi</artifactId>
             <version>jdk-8</version>
             <scope>system</scope>
             <systemPath>${env.JAVA_HOME}/lib/sa-jdi.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.tools</groupId>
+            <artifactId>tools</artifactId>
+            <version>jdk-8</version>
+            <scope>system</scope>
+            <systemPath>${env.JAVA_HOME}/lib/tools.jar</systemPath>
         </dependency>
     </dependencies>
 
