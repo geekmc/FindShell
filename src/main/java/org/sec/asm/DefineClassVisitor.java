@@ -5,7 +5,6 @@ import org.objectweb.asm.MethodVisitor;
 import org.sec.Result;
 
 import java.util.List;
-import java.util.Map;
 
 public class DefineClassVisitor extends ClassVisitor {
     private String owner;

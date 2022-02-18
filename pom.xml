@@ -38,6 +38,11 @@
             <version>1.82</version>
         </dependency>
         <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.28.0-GA</version>
+        </dependency>
+        <dependency>
             <groupId>sun.jvm.hotspot</groupId>
             <artifactId>sa-jdi</artifactId>
             <version>jdk-8</version>
