@@ -43,7 +43,11 @@ keyword.add("rebeyond");
 keyword.add("metasploit");
 ```
 
-可以修改`org.sec.Constant`中的代码以自定义黑名单和关键字实现自己的效果
+注意：
+
+- 修改`org.sec.Constant`代码可以自定义黑名单和关键字
+- 加入`--debug`参数保留从`JVM`中`dump`出的字节码供自行分析
+- 并不是所有类的字节码都可以`dump`成功，但常见的这些类测试中没问题
 
 ## 修复
 
@@ -84,6 +88,8 @@ keyword.add("metasploit");
 ## 参考与感谢
 
 https://mp.weixin.qq.com/s/Whta6akjaZamc3nOY1Tvxg#at
+
+占位，先知社区文章审核中...
 
 ## 免责声明
 
